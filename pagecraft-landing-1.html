@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Pages That Actually Convert — For Indie Builders</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f0ece4;
+    --accent: #c8f135;
+    --muted: #3a3a3a;
+    --mid: #888;
+    --card: #111;
+    --border: #222;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    padding: 8px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: crosshair;
+  }
+  .nav-cta:hover { background: var(--fg); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 160px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 20vw, 260px);
+    color: rgba(255,255,255,0.03);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -2px;
+    user-select: none;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+
+  .hero-tag span {
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 12px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 9vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -1px;
+    max-width: 900px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.35s forwards;
+  }
+
+  h1 em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    max-width: 480px;
+    color: var(--mid);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.5s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.65s forwards;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    padding: 14px 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: crosshair;
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--mid);
+    font-size: 13px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--muted);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--fg); }
+
+  .hero-stats {
+    position: absolute;
+    right: 40px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    text-align: right;
+    opacity: 0;
+    animation: fadeIn 1s ease 1s forwards;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--fg);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--mid);
+    text-transform: uppercase;
+  }
+
+  /* TICKER */
+  .ticker-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 14px 0;
+    background: var(--card);
+  }
+
+  .ticker {
+    display: flex;
+    gap: 0;
+    animation: ticker 18s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding: 0 40px;
+    flex-shrink: 0;
+  }
+
+  .ticker-item span {
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* SECTION BASE */
+  section { padding: 100px 40px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+  }
+
+  h2 em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* PROBLEM */
+  .problem {
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .problem-text p {
+    color: var(--mid);
+    font-size: 14px;
+    line-height: 1.9;
+    margin-bottom: 16px;
+  }
+
+  .problem-text p strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .problem-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .score-bar:hover { border-color: var(--accent); }
+
+  .score-label { font-size: 11px; color: var(--mid); flex: 1; letter-spacing: 1px; }
+  .score-track { flex: 2; height: 3px; background: var(--muted); position: relative; border-radius: 2px; }
+  .score-fill { height: 100%; border-radius: 2px; transition: width 1.5s ease; }
+  .score-fill.bad { background: #ff4444; }
+  .score-fill.ok { background: #ffaa00; }
+  .score-fill.good { background: var(--accent); }
+  .score-val { font-size: 11px; color: var(--mid); width: 30px; text-align: right; font-weight: 500; }
+
+  /* WORK */
+  .work { border-top: 1px solid var(--border); }
+
+  .work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .work-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+    cursor: crosshair;
+  }
+  .work-card:hover { border-color: var(--accent); }
+  .work-card:hover .card-arrow { transform: translate(4px, -4px); color: var(--accent); }
+
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
+
+  .card-metrics {
+    display: flex;
+    gap: 28px;
+  }
+
+  .metric { display: flex; flex-direction: column; gap: 4px; }
+  .metric-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); line-height: 1; }
+  .metric-key { font-size: 10px; color: var(--mid); letter-spacing: 2px; text-transform: uppercase; }
+
+  .card-arrow {
+    position: absolute;
+    top: 36px; right: 36px;
+    font-size: 20px;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .card-preview {
+    margin-top: 32px;
+    height: 120px;
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .preview-ui {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .preview-line {
+    height: 8px;
+    border-radius: 2px;
+    background: var(--muted);
+    opacity: 0.5;
+  }
+  .preview-line.accent { background: var(--accent); opacity: 0.7; width: 40%; }
+  .preview-line.short { width: 60%; }
+  .preview-line.med { width: 80%; }
+
+  /* PRICING */
+  .pricing { border-top: 1px solid var(--border); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .price-card:hover { border-color: #444; }
+  .price-card.featured { border-color: var(--accent); background: #0e110a; }
+
+  .featured-badge {
+    position: absolute;
+    top: -1px; right: 32px;
+    background: var(--accent);
+    color: #000;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    font-weight: 500;
+  }
+
+  .price-tier {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 24px;
+  }
+
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--fg);
+    margin-bottom: 4px;
+  }
+
+  .price-amount sup { font-size: 24px; vertical-align: super; }
+  .price-note { font-size: 11px; color: var(--mid); margin-bottom: 32px; }
+
+  .price-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .price-features li {
+    font-size: 12px;
+    color: var(--mid);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .price-features li::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .price-features li.included { color: var(--fg); }
+
+  .btn-price {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    transition: all 0.2s;
+    cursor: crosshair;
+  }
+  .btn-price:hover { border-color: var(--fg); }
+  .btn-price.featured-btn { background: var(--accent); color: #000; border-color: var(--accent); }
+  .btn-price.featured-btn:hover { background: #fff; border-color: #fff; }
+
+  /* PROCESS */
+  .process { border-top: 1px solid var(--border); }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .step {
+    padding: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step::before {
+    content: attr(data-num);
+    position: absolute;
+    top: 16px; right: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .step-icon {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.8;
+  }
+
+  .step-time {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* TEARDOWN CTA */
+  .teardown {
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    text-align: center;
+    padding: 100px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .teardown::before {
+    content: 'FREE';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 18vw, 220px);
+    color: rgba(200,241,53,0.04);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .teardown-tag {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .teardown h2 {
+    margin-bottom: 16px;
+  }
+
+  .teardown p {
+    color: var(--mid);
+    font-size: 14px;
+    max-width: 440px;
+    margin: 0 auto 40px;
+    line-height: 1.9;
+  }
+
+  .teardown-form {
+    display: flex;
+    gap: 0;
+    max-width: 460px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .teardown-input {
+    flex: 1;
+    padding: 14px 20px;
+    background: #0a0a0a;
+    border: 1px solid var(--muted);
+    border-right: none;
+    color: var(--fg);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .teardown-input:focus { border-color: var(--accent); }
+  .teardown-input::placeholder { color: var(--muted); }
+
+  .teardown-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 14px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: crosshair;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .teardown-btn:hover { background: #fff; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 140px 20px 60px; }
+    .hero-stats { display: none; }
+    section { padding: 60px 20px; }
+    .problem { grid-template-columns: 1fr; gap: 40px; }
+    .work-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .work-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .teardown-form { flex-direction: column; }
+    .teardown-input { border-right: 1px solid var(--muted); border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PAGECRAFT</div>
+  <a href="#teardown" class="nav-cta">GET FREE TEARDOWN</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">CONVERT</div>
+
+  <div class="hero-tag"><span></span>For Indie Builders & Micro SaaS Founders</div>
+
+  <h1>Your Product <em>Deserves</em> A Page That Sells</h1>
+
+  <p class="hero-sub">
+    You spent months building. Don't lose users in the first 10 seconds.
+    I build high-converting landing pages for indie tools — delivered in 48 hours, starting at $79.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#teardown" class="btn-primary">GET FREE PAGE TEARDOWN</a>
+    <a href="#work" class="btn-ghost">SEE THE WORK</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">48H</div>
+      <div class="stat-label">Delivery</div>
+    </div>
+    <div>
+      <div class="stat-num">$79</div>
+      <div class="stat-label">Starts at</div>
+    </div>
+    <div>
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Custom Built</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item"><span>✦</span> LANDING PAGES THAT CONVERT</div>
+    <div class="ticker-item"><span>✦</span> DELIVERED IN 48 HOURS</div>
+    <div class="ticker-item"><span>✦</span> BUILT FOR INDIE MAKERS</div>
+    <div class="ticker-item"><span>✦</span> STARTS AT $79</div>
+    <div class="ticker-item"><span>✦</span> FREE PAGE TEARDOWN</div>
+    <div class="ticker-item"><span>✦</span> NO TEMPLATES. EVER.</div>
+    <div class="ticker-item"><span>✦</span> LANDING PAGES THAT CONVERT</div>
+    <div class="ticker-item"><span>✦</span> DELIVERED IN 48 HOURS</div>
+    <div class="ticker-item"><span>✦</span> BUILT FOR INDIE MAKERS</div>
+    <div class="ticker-item"><span>✦</span> STARTS AT $79</div>
+    <div class="ticker-item"><span>✦</span> FREE PAGE TEARDOWN</div>
+    <div class="ticker-item"><span>✦</span> NO TEMPLATES. EVER.</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem reveal">
+  <div class="problem-text">
+    <div class="section-label">The Problem</div>
+    <h2>Great Tools.<br><em>Invisible</em> Pages.</h2>
+    <p>Most indie SaaS pages fail before a visitor even reads a word. <strong>Slow load. Weak headline. No clear CTA.</strong> The product is solid — the page just doesn't show it.</p>
+    <p>Visitors decide in <strong>8 seconds</strong> whether to stay or bounce. If your page doesn't immediately answer "what is this, and why should I care?" — they're gone forever.</p>
+    <p>You've already done the hard part. <strong>Let me fix the page.</strong></p>
+  </div>
+  <div class="problem-visual">
+    <div class="score-bar">
+      <span class="score-label">TYPICAL SAAS PAGE</span>
+      <div class="score-track"><div class="score-fill bad" style="width:28%"></div></div>
+      <span class="score-val bad" style="color:#ff4444">28</span>
+    </div>
+    <div class="score-bar">
+      <span class="score-label">TEMPLATE PAGE</span>
+      <div class="score-track"><div class="score-fill ok" style="width:51%"></div></div>
+      <span class="score-val" style="color:#ffaa00">51</span>
+    </div>
+    <div class="score-bar">
+      <span class="score-label">PAGECRAFT BUILD</span>
+      <div class="score-track"><div class="score-fill good" style="width:87%"></div></div>
+      <span class="score-val" style="color:var(--accent)">87</span>
+    </div>
+    <div style="padding: 12px 20px; font-size: 10px; color: var(--muted); letter-spacing: 1px;">
+      * Conversion readiness score based on copy clarity, CTA structure, and load speed
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work reveal" id="work">
+  <div class="work-header">
+    <div>
+      <div class="section-label">Portfolio</div>
+      <h2>Recent <em>Builds</em></h2>
+    </div>
+    <div style="font-size: 12px; color: var(--mid); max-width: 240px; line-height: 1.8;">
+      Each page is built from scratch — no templates, no page builders.
+    </div>
+  </div>
+
+  <div class="work-grid">
+    <div class="work-card">
+      <span class="card-arrow">↗</span>
+      <div class="card-tag"><span class="card-dot"></span>Productivity Tool</div>
+      <div class="card-title">TaskFlow AI</div>
+      <p class="card-desc">AI-powered task prioritisation for solo founders. Page rebuilt to lead with the core benefit — 3x sign-up lift in 2 weeks.</p>
+      <div class="card-metrics">
+        <div class="metric"><div class="metric-val">3.2×</div><div class="metric-key">Signups</div></div>
+        <div class="metric"><div class="metric-val">48h</div><div class="metric-key">Delivered</div></div>
+        <div class="metric"><div class="metric-val">$79</div><div class="metric-key">Tier</div></div>
+      </div>
+      <div class="card-preview">
+        <div class="preview-ui">
+          <div class="preview-line accent"></div>
+          <div class="preview-line med"></div>
+          <div class="preview-line short"></div>
+          <div class="preview-line" style="width:35%; background:var(--accent); opacity:0.9; height:12px; border-radius:2px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <span class="card-arrow">↗</span>
+      <div class="card-tag"><span class="card-dot"></span>Dev Tool</div>
+      <div class="card-title">Logsense</div>
+      <p class="card-desc">Error tracking for indie devs. Previous page had no headline hierarchy. Rebuilt with benefit-first copy and a live demo embed.</p>
+      <div class="card-metrics">
+        <div class="metric"><div class="metric-val">60%</div><div class="metric-key">Less Bounce</div></div>
+        <div class="metric"><div class="metric-val">48h</div><div class="metric-key">Delivered</div></div>
+        <div class="metric"><div class="metric-val">$129</div><div class="metric-key">Tier</div></div>
+      </div>
+      <div class="card-preview">
+        <div class="preview-ui">
+          <div class="preview-line accent"></div>
+          <div class="preview-line"></div>
+          <div class="preview-line med"></div>
+          <div class="preview-line short"></div>
+          <div class="preview-line" style="width:28%; background:var(--accent); opacity:0.9; height:12px; border-radius:2px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <span class="card-arrow">↗</span>
+      <div class="card-tag"><span class="card-dot"></span>SaaS Analytics</div>
+      <div class="card-title">Cohortly</div>
+      <p class="card-desc">Cohort analysis made simple for non-technical founders. Full Launch package — page, OG tags, PH launch copy.</p>
+      <div class="card-metrics">
+        <div class="metric"><div class="metric-val">#4</div><div class="metric-key">PH Launch</div></div>
+        <div class="metric"><div class="metric-val">36h</div><div class="metric-key">Delivered</div></div>
+        <div class="metric"><div class="metric-val">$199</div><div class="metric-key">Tier</div></div>
+      </div>
+      <div class="card-preview">
+        <div class="preview-ui">
+          <div class="preview-line accent"></div>
+          <div class="preview-line"></div>
+          <div class="preview-line med"></div>
+          <div class="preview-line short"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="work-card" style="border-style: dashed; border-color: var(--muted); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 300px;">
+      <div style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--muted); margin-bottom: 12px;">YOUR TOOL</div>
+      <p style="font-size: 12px; color: var(--muted); max-width: 200px; line-height: 1.8;">Your project could be here. Start with a free teardown.</p>
+      <a href="#teardown" class="btn-primary" style="margin-top: 24px; font-size: 11px;">GET TEARDOWN →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process reveal">
+  <div class="section-label">How It Works</div>
+  <h2>Simple.<br><em>Fast.</em> Done.</h2>
+
+  <div class="process-steps">
+    <div class="step" data-num="01">
+      <div class="step-icon">📋</div>
+      <div class="step-title">Brief Form</div>
+      <p class="step-desc">Fill a short form — tool name, target user, 3 core benefits, and your CTA goal. Takes 5 minutes.</p>
+      <div class="step-time">Day 1 · Morning</div>
+    </div>
+    <div class="step" data-num="02">
+      <div class="step-icon">✍️</div>
+      <div class="step-title">Copy + Design</div>
+      <p class="step-desc">I write the copy and build the page in a single clean HTML file. No frameworks. Lightning fast.</p>
+      <div class="step-time">Day 1–2 · Build</div>
+    </div>
+    <div class="step" data-num="03">
+      <div class="step-icon">👁️</div>
+      <div class="step-title">Review</div>
+      <p class="step-desc">You get a live preview link. Request up to 3 rounds of revisions — I turn them around same day.</p>
+      <div class="step-time">Day 2 · Revisions</div>
+    </div>
+    <div class="step" data-num="04">
+      <div class="step-icon">🚀</div>
+      <div class="step-title">Ship It</div>
+      <p class="step-desc">You receive the final HTML file + all assets. Deploy on any host in minutes. Go live.</p>
+      <div class="step-time">Day 2 · Done</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing reveal">
+  <div class="section-label">Pricing</div>
+  <h2>Transparent.<br><em>Flat Rate.</em></h2>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount"><sup>$</sup>79</div>
+      <div class="price-note">one-time · delivered in 48h</div>
+      <ul class="price-features">
+        <li class="included">Single landing page</li>
+        <li class="included">Custom copy + design</li>
+        <li class="included">Mobile responsive</li>
+        <li class="included">2 revisions</li>
+        <li>Email opt-in section</li>
+        <li>SEO meta tags</li>
+        <li>Product Hunt copy</li>
+      </ul>
+      <a href="#teardown" class="btn-price">GET STARTED →</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="featured-badge">MOST POPULAR</div>
+      <div class="price-tier">Pro</div>
+      <div class="price-amount"><sup>$</sup>129</div>
+      <div class="price-note">one-time · delivered in 48h</div>
+      <ul class="price-features">
+        <li class="included">Single landing page</li>
+        <li class="included">Custom copy + design</li>
+        <li class="included">Mobile responsive</li>
+        <li class="included">3 revisions</li>
+        <li class="included">Email opt-in section</li>
+        <li class="included">SEO meta tags</li>
+        <li>Product Hunt copy</li>
+      </ul>
+      <a href="#teardown" class="btn-price featured-btn">GET STARTED →</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tier">Launch</div>
+      <div class="price-amount"><sup>$</sup>199</div>
+      <div class="price-note">one-time · delivered in 48h</div>
+      <ul class="price-features">
+        <li class="included">Single landing page</li>
+        <li class="included">Custom copy + design</li>
+        <li class="included">Mobile responsive</li>
+        <li class="included">Unlimited revisions</li>
+        <li class="included">Email opt-in section</li>
+        <li class="included">SEO meta tags</li>
+        <li class="included">Product Hunt copy</li>
+      </ul>
+      <a href="#teardown" class="btn-price">GET STARTED →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FREE TEARDOWN CTA -->
+<section class="teardown reveal" id="teardown">
+  <div class="teardown-tag">Zero Risk · Completely Free</div>
+  <h2>Send Me Your<br><em>Current Page.</em></h2>
+  <p>I'll review your page and show exactly what's hurting your conversions — and how to fix it. No pitch. No strings.</p>
+  <div class="teardown-form">
+    <input type="url" class="teardown-input" placeholder="paste your landing page URL..." id="teardownUrl">
+    <button class="teardown-btn" onclick="handleTeardown()">GET TEARDOWN →</button>
+  </div>
+  <div id="teardown-success" style="display:none; margin-top:20px; color:var(--accent); font-size:13px; letter-spacing:1px;">
+    ✦ Got it. I'll send your teardown within 24 hours.
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PAGECRAFT</div>
+  <div class="footer-note">© 2025 · Built for indie builders · No templates, ever.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Teardown form
+  function handleTeardown() {
+    const url = document.getElementById('teardownUrl').value.trim();
+    if (!url) {
+      document.getElementById('teardownUrl').style.borderColor = '#ff4444';
+      setTimeout(() => document.getElementById('teardownUrl').style.borderColor = '', 1500);
+      return;
+    }
+    document.querySelector('.teardown-form').style.display = 'none';
+    document.getElementById('teardown-success').style.display = 'block';
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
